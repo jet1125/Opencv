@@ -75,4 +75,5 @@ Thumbs.db
 *.caffemodel
 dataset/
 combine/models/
+*.model
 
