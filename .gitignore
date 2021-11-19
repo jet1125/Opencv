@@ -69,6 +69,7 @@ Thumbs.db
 *.jpg
 *.jpeg
 *.png
+*.mp4
 *.cfg
 *.weights
 *.sh
@@ -76,4 +77,6 @@ Thumbs.db
 dataset/
 combine/models/
 *.model
+images/
+models/
 
