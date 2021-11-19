@@ -69,7 +69,10 @@ Thumbs.db
 *.jpg
 *.jpeg
 *.png
-
+*.cfg
+*.weights
+*.sh
+*.caffemodel
 dataset/
 combine/models/
 
