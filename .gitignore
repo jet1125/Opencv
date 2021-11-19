@@ -71,4 +71,5 @@ Thumbs.db
 *.png
 
 dataset/
+combine/models/
 
