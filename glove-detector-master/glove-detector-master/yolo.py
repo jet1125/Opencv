@@ -39,7 +39,7 @@ class YOLO:
         boxes = []
         confidences = []
         classIDs = []
-        print(np.array(layerOutputs).shape)
+
         for output in layerOutputs:
             # loop over each of the detections
             for detection in output:
@@ -47,7 +47,6 @@ class YOLO:
                 # the current object detection
                 scores = detection[5:]
                 classID = np.argmax(scores)
-                #print(classID)
                 confidence = scores[classID]
                 # filter out weak predictions by ensuring the detected
                 # probability is greater than the minimum probability
