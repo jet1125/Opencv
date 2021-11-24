@@ -27,7 +27,7 @@ import os
 # initialize the initial learning rate, number of epochs to train for,
 # and batch size
 INIT_LR = 1e-4
-EPOCHS = 5
+EPOCHS = 20
 BS = 32
 
 # grab the list of images in our dataset directory, then initialize
@@ -128,7 +128,7 @@ print(classification_report(testY.argmax(axis=1), predIdxs,
 # serialize the model to disk
 print("[INFO] saving mask detector model...")
 
-model.save("mask_detector.model", save_format="h5")
+model.save("glove_detector.model", save_format="h5")
 
 # plot the training loss and accuracy
 N = EPOCHS

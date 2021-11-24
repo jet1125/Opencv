@@ -40,6 +40,8 @@
 
 *.zip
 
+*.tgz
+
  
 
 # Logs and databases #
@@ -71,9 +73,11 @@ Thumbs.db
 *.png
 *.mp4
 *.cfg
+*.h5
 *.weights
 *.sh
 *.caffemodel
+*.data-00000-of-00001
 dataset/
 combine/models/
 *.model
