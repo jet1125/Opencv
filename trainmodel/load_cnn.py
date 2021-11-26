@@ -1,13 +1,12 @@
 # Python ≥3.5 is required
 import sys
 
-from tensorflow.python.training.tracking.util import Checkpoint
+#from trainmodel.class1 import ResidualUnit
 assert sys.version_info >= (3, 5)
 
 # Scikit-Learn ≥0.20 is required
 import sklearn
 assert sklearn.__version__ >= "0.20"
-from sklearn.model_selection import train_test_split
 
 # Is this notebook running on Colab?
 #IS_COLAB = "google.colab" in sys.modules
@@ -23,6 +22,7 @@ from tensorflow.keras.layers import Flatten
 from tensorflow.keras.layers import Dense
 from tensorflow.keras.layers import Input
 from tensorflow.keras.models import Model
+from keras.models import model_from_json
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.applications.mobilenet_v2 import preprocess_input
 from tensorflow.keras.preprocessing.image import img_to_array
@@ -33,6 +33,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report
 from imutils import paths
 import matplotlib.pyplot as plt
+from tensorflow.keras.models import load_model
 
 assert tf.__version__ >= "2.0"
 
@@ -50,6 +51,46 @@ tf.random.set_seed(42)
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 from functools import partial
+#from class1 import ResidualUnit
+#import class1 #import DefaultConv2D
+DefaultConv2D = partial(keras.layers.Conv2D, kernel_size=3, strides=1,
+                        padding="SAME", use_bias=False)
+
+"""class ResidualUnit(keras.layers.Layer):
+    def __init__(self, filters, strides=1, activation="relu", **kwargs):
+        super().__init__(**kwargs)
+        self.activation = keras.activations.get(activation)
+        self.main_layers = [
+            DefaultConv2D(filters, strides=strides),
+            keras.layers.BatchNormalization(),
+            self.activation,
+            DefaultConv2D(filters),
+            keras.layers.BatchNormalization()]
+        #self.skip_layers = []
+        #if strides > 1:
+        #    self.skip_layers = [
+         #       DefaultConv2D(filters, kernel_size=1, strides=strides),
+         #       keras.layers.BatchNormalization()]
+
+    def get_config(self):
+        config = super().get_config().copy()
+        config.update({
+            #'skip_layers': self.skip_layers,
+            'activation': self.activation,
+        
+        })
+        return config
+
+    def call(self, inputs):
+        Z = inputs
+        for layer in self.main_layers:
+            Z = layer(Z)
+        skip_Z = inputs
+        #for layer in self.skip_layers:
+            #skip_Z = layer(skip_Z)
+        #return self.activation(Z + skip_Z)
+        return self.activation(Z)"""
+
 
 
 mpl.rc('axes', labelsize=14)
@@ -97,7 +138,6 @@ for imagePath in imagePaths:
     elif label == "without_glove":
         labels.append(0)
     
-
 print(label)
 X_train, X_test, y_train, y_test = train_test_split(np.array(data), np.array(labels), 
                             test_size=0.2, random_state=42, stratify=np.array(labels))
@@ -118,47 +158,11 @@ X_valid = X_valid[..., np.newaxis]
 X_test = X_test[..., np.newaxis]
 
 
-DefaultConv2D = partial(keras.layers.Conv2D, kernel_size=3, strides=1,
-                        padding="SAME", use_bias=False)
 
-class ResidualUnit(keras.layers.Layer):
-    def __init__(self, filters, strides=1, activation="relu", **kwargs):
-        super().__init__(**kwargs)
-        self.activation = keras.activations.get(activation)
-        self.main_layers = [
-            DefaultConv2D(filters, strides=strides),
-            keras.layers.BatchNormalization(),
-            self.activation,
-            DefaultConv2D(filters),
-            keras.layers.BatchNormalization()]
-        self.skip_layers = []
-        if strides > 1:
-            self.skip_layers = [
-                DefaultConv2D(filters, kernel_size=1, strides=strides),
-                keras.layers.BatchNormalization()]
-
-    def get_config(self):
-        config = super().get_config().copy()
-        config.update({
-            'skip_layers': self.skip_layers,
-            'activation': self.activation,
-        
-        })
-        return config
-
-    def call(self, inputs):
-        Z = inputs
-        for layer in self.main_layers:
-            Z = layer(Z)
-        skip_Z = inputs
-        for layer in self.skip_layers:
-            skip_Z = layer(skip_Z)
-        return self.activation(Z + skip_Z)
-        #return self.activation(Z)
+#train_test_split(x_data, y_data, test_size=0.3, random_state=777, stratify=y_data)
 
 
-
-model = keras.models.Sequential()
+"""model = keras.models.Sequential()
 model.add(DefaultConv2D(64, kernel_size=7, strides=2,
                         input_shape=[224, 224, 3]))
 model.add(keras.layers.BatchNormalization())
@@ -175,21 +179,24 @@ model.add(keras.layers.Dense(2, activation="softmax"))
 
 model.summary()
 
-model.compile(loss="sparse_categorical_crossentropy", optimizer="nadam", metrics=["accuracy"])
-checkpoint_path = "D:/KUME/Opencv/trainmodel/ckp/"
-cp_callback = tf.keras.callbacks.ModelCheckpoint(filepath=checkpoint_path,
-                                                 save_weights_only=True,
-                                                 verbose=1)
-history = model.fit(X_train, y_train, epochs=10, validation_data=(X_valid, y_valid), callbacks = [cp_callback])
-score = model.evaluate(X_test, y_test)
-X_new = X_valid[:10]
+model.compile(loss="sparse_categorical_crossentropy", optimizer="nadam", metrics=["accuracy"])"""
+#checkpoint_path = "D:/KUME/Opencv/trainmodel/ckp"
+#model = keras.models.load_model("D:/KUME/Opencv/trainmodel/glove_detector_model.h5")
+#model = keras.models.load_model("D:/KUME/Opencv/trainmodel/glove_detector_model.h5", 
+#                        custom_objects={'ResidualUnit': ResidualUnit, 'DefaultConv2D' : DefaultConv2D})
+#skip_layers = []
+#model.load_weights(checkpoint_path)
+#y_pred = model.predict(X_train[:])
+#model = load_model("D:/KUME/Opencv/trainmodel/glove_detector.model",
+#                        custom_objects={'ResidualUnit': ResidualUnit, 'DefaultConv2D' : DefaultConv2D})
+
+with open("glove.json", "r") as fp:
+    model = model_from_json(fp.read(), custom_objects={"DefaultConv2D" : DefaultConv2D})
+
+model.load_weights("glove_weights.h5")
+X_new = X_train[:10]
 y_pred = model.predict(X_new)
 
 print(y_pred)
-print(y_valid[:10])
-model_json = model.to_json(indent="\t")
-with open("glove.json", "w") as fp:
-    fp.write(model_json)
-model.save_weights("glove_weights.h5")
-#model.save("glove_detector.model", save_format="h5")
-#model.load_weights(checkpoint_path)
+print(y_train[:10])
+#print(y_pred)
